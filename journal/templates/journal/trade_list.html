@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trading Journal</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .btn { padding: 8px 16px; text-decoration: none; border-radius: 4px; display: inline-block; margin-right: 5px; font-size: 14px; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-warning { background: #ffc107; color: #212529; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn:hover { opacity: 0.9; }
+        .stats { background: #f8f9fa; padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 1.5em; font-weight: bold; }
+        .trade-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .trade-table th, .trade-table td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        .trade-table th { background: #f8f9fa; font-weight: bold; }
+        .trade-buy { color: #28a745; font-weight: bold; }
+        .trade-sell { color: #dc3545; font-weight: bold; }
+        .pnl-positive { color: #28a745; font-weight: bold; }
+        .pnl-negative { color: #dc3545; font-weight: bold; }
+        .pnl-zero { color: #6c757d; }
+        .status-closed { background: #d4edda; color: #155724; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; }
+        .status-open { background: #fff3cd; color: #856404; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; }
+        .actions { white-space: nowrap; }
+        .no-trades { text-align: center; padding: 40px; color: #6c757d; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Trading Journal</h1>
+        <div>
+            <a href="{% url 'journal:trade_create' %}" class="btn btn-success">+ Add New Trade</a>
+            <a href="{% url 'journal:logout' %}" class="btn btn-secondary">Logout ({{ user.username }})</a>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Statistics -->
+    <div class="stats">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-value">{{ total_trades }}</div>
+                <div>Total Trades</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">{{ closed_trades }}</div>
+                <div>Closed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">{{ open_trades }}</div>
+                <div>Open</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value {% if total_pnl >= 0 %}pnl-positive{% else %}pnl-negative{% endif %}">
+                    ${{ total_pnl|floatformat:2 }}
+                </div>
+                <div>Total P&L</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trade List -->
+    {% if trades %}
+        <table class="trade-table">
+            <thead>
+                <tr>
+                    <th>Symbol</th>
+                    <th>Side</th>
+                    <th>Quantity</th>
+                    <th>Entry Price</th>
+                    <th>Entry Date</th>
+                    <th>Exit Price</th>
+                    <th>Exit Date</th>
+                    <th>P&L</th>
+                    <th>Status</th>
+                    <th>Mistakes</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trade in trades %}
+                    <tr>
+                        <td><strong>{{ trade.symbol.symbol }}</strong></td>
+                        <td class="trade-{{ trade.side }}">{{ trade.side|title }}</td>
+                        <td>{{ trade.quantity|floatformat:8 }}</td>
+                        <td>${{ trade.entry_price|floatformat:8 }}</td>
+                        <td>{{ trade.entry_date|date:"M d, Y H:i" }}</td>
+                        <td>
+                            {% if trade.exit_price %}
+                                ${{ trade.exit_price|floatformat:8 }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if trade.exit_date %}
+                                {{ trade.exit_date|date:"M d, Y H:i" }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if trade.pnl is not none %}
+                                <span class="pnl-{% if trade.pnl > 0 %}positive{% elif trade.pnl < 0 %}negative{% else %}zero{% endif %}">
+                                    ${{ trade.pnl|floatformat:2 }}
+                                </span>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if trade.is_closed %}
+                                <span class="status-closed">Closed</span>
+                            {% else %}
+                                <span class="status-open">Open</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if trade.mistakes.all %}
+                                {% for mistake in trade.mistakes.all %}
+                                    <span class="mistake-tag" style="display: inline-block; background: #f0f0f0; padding: 2px 6px; margin: 1px; border-radius: 3px; font-size: 0.8em;">
+                                        {{ mistake.name }}
+                                    </span>
+                                {% endfor %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>{{ trade.notes|truncatechars:50|default:"-" }}</td>
+                        <td class="actions">
+                            <a href="{% url 'journal:trade_update' trade.id %}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{% url 'journal:trade_delete' trade.id %}" class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="no-trades">
+            <h3>No trades found</h3>
+            <p><a href="{% url 'journal:trade_create' %}">Add your first trade</a> to get started.</p>
+        </div>
+    {% endif %}
+</body>
+</html>

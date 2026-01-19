@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }} - Trading Journal</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select, textarea {
+            width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;
+        }
+        .help-text { font-size: 0.9em; color: #666; margin-top: 3px; }
+        .error { color: red; font-size: 0.9em; }
+        .success { color: green; }
+        button {
+            background: #007bff; color: white; padding: 10px 20px;
+            border: none; border-radius: 4px; cursor: pointer;
+        }
+        button:hover { background: #0056b3; }
+        .nav { margin-bottom: 20px; }
+        .nav a { margin-right: 15px; color: #007bff; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="{% url 'journal:trade_list' %}">← Back to Journal</a> |
+        <a href="{% url 'journal:logout' %}">Logout ({{ user.username }})</a>
+    </div>
+
+    <h1>{{ title }}</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+            {{ form.symbol_input.label_tag }}
+            {{ form.symbol_input }}
+            {% if form.symbol_input.help_text %}
+                <div class="help-text">{{ form.symbol_input.help_text }}</div>
+            {% endif %}
+            {% if form.symbol_input.errors %}
+                <div class="error">{{ form.symbol_input.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.side.label_tag }}
+            {{ form.side }}
+            {% if form.side.help_text %}
+                <div class="help-text">{{ form.side.help_text }}</div>
+            {% endif %}
+            {% if form.side.errors %}
+                <div class="error">{{ form.side.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.quantity.label_tag }}
+            {{ form.quantity }}
+            {% if form.quantity.help_text %}
+                <div class="help-text">{{ form.quantity.help_text }}</div>
+            {% endif %}
+            {% if form.quantity.errors %}
+                <div class="error">{{ form.quantity.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.entry_price.label_tag }}
+            {{ form.entry_price }}
+            {% if form.entry_price.help_text %}
+                <div class="help-text">{{ form.entry_price.help_text }}</div>
+            {% endif %}
+            {% if form.entry_price.errors %}
+                <div class="error">{{ form.entry_price.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.entry_date.label_tag }}
+            {{ form.entry_date }}
+            {% if form.entry_date.help_text %}
+                <div class="help-text">{{ form.entry_date.help_text }}</div>
+            {% endif %}
+            {% if form.entry_date.errors %}
+                <div class="error">{{ form.entry_date.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.exit_price.label_tag }}
+            {{ form.exit_price }}
+            {% if form.exit_price.help_text %}
+                <div class="help-text">{{ form.exit_price.help_text }}</div>
+            {% endif %}
+            {% if form.exit_price.errors %}
+                <div class="error">{{ form.exit_price.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.exit_date.label_tag }}
+            {{ form.exit_date }}
+            {% if form.exit_date.help_text %}
+                <div class="help-text">{{ form.exit_date.help_text }}</div>
+            {% endif %}
+            {% if form.exit_date.errors %}
+                <div class="error">{{ form.exit_date.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.notes.label_tag }}
+            {{ form.notes }}
+            {% if form.notes.help_text %}
+                <div class="help-text">{{ form.notes.help_text }}</div>
+            {% endif %}
+            {% if form.notes.errors %}
+                <div class="error">{{ form.notes.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.mistakes.label_tag }}
+            <div style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 4px;">
+                {{ form.mistakes }}
+            </div>
+            {% if form.mistakes.help_text %}
+                <div class="help-text">{{ form.mistakes.help_text }}</div>
+            {% endif %}
+            {% if form.mistakes.errors %}
+                <div class="error">{{ form.mistakes.errors }}</div>
+            {% endif %}
+        </div>
+
+        {% if form.non_field_errors %}
+            <div class="error">
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <button type="submit">Add Trade to Journal</button>
+    </form>
+
+    <div style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 4px;">
+        <h3>Validation Rules:</h3>
+        <ul>
+            <li><strong>Symbol:</strong> Required, will be created automatically if new</li>
+            <li><strong>Quantity & Prices:</strong> Must be positive numbers</li>
+            <li><strong>Entry Date:</strong> Defaults to current time, cannot be in future</li>
+            <li><strong>Exit fields:</strong> Both required together, or both left blank for open positions</li>
+            <li><strong>Exit Date:</strong> Cannot be before entry date</li>
+            <li><strong>P&L:</strong> Calculated automatically when trade is saved</li>
+        </ul>
+    </div>
+</body>
+</html>
