@@ -51,6 +51,7 @@ This app does not provide trading advice. It is purely for self-reflection and l
 📌 Contact
 
 Arya Banerjee
-
+Wiqi
 aryabanerjee8627
+
 
