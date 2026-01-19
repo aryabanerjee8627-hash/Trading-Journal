@@ -180,11 +180,17 @@ class Trade(models.Model):
 
     def clean(self):
         """Validate trade data"""
-        if self.entry_date and self.entry_date > timezone.now():
-            raise ValidationError("Entry date cannot be in the future.")
+        now = timezone.now()
 
-        if self.exit_date and self.exit_date > timezone.now():
-            raise ValidationError("Exit date cannot be in the future.")
+        if self.entry_date:
+            # Allow for a small grace period (e.g., 1 minute) to account for timing differences
+            if self.entry_date > now + timezone.timedelta(minutes=1):
+                raise ValidationError("Entry date cannot be in the future.")
+
+        if self.exit_date:
+            # Allow for a small grace period (e.g., 1 minute) to account for timing differences
+            if self.exit_date > now + timezone.timedelta(minutes=1):
+                raise ValidationError("Exit date cannot be in the future.")
 
         if self.entry_date and self.exit_date and self.exit_date < self.entry_date:
             raise ValidationError("Exit date cannot be before entry date.")

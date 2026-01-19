@@ -69,7 +69,7 @@ def trade_create(request):
     Only logged-in users can create trades.
     """
     if request.method == 'POST':
-        form = TradeCreateForm(request.POST)
+        form = TradeCreateForm(request.POST, user=request.user)
         if form.is_valid():
             try:
                 # Save the trade with the current user
@@ -91,7 +91,7 @@ def trade_create(request):
                 'Please correct the errors below and try again.'
             )
     else:
-        form = TradeCreateForm()
+        form = TradeCreateForm(user=request.user)
 
     return render(request, 'journal/trade_create.html', {
         'form': form,
@@ -116,7 +116,7 @@ def trade_update(request, trade_id):
     trade = get_object_or_404(request.user.trades, id=trade_id)
 
     if request.method == 'POST':
-        form = TradeCreateForm(request.POST, instance=trade)
+        form = TradeCreateForm(request.POST, instance=trade, user=request.user)
         if form.is_valid():
             try:
                 # Save the updated trade (user remains the same)
@@ -138,7 +138,7 @@ def trade_update(request, trade_id):
             )
     else:
         # Pre-populate form with existing trade data
-        form = TradeCreateForm(instance=trade)
+        form = TradeCreateForm(instance=trade , user=request.user)
 
     return render(request, 'journal/trade_create.html', {
         'form': form,

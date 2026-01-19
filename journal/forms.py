@@ -70,71 +70,80 @@ class TradeCreateForm(forms.ModelForm):
             'mistakes': 'Select any mistakes you made in this trade (for behavioral learning)',
         }
 
+
     def __init__(self, *args, **kwargs):
         """Initialize form with current datetime as default for entry_date."""
+        self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         # Set default entry date to now
         if not self.instance.pk:  # Only for new trades
-            self.fields['entry_date'].initial = timezone.now()
+            if self.user and hasattr(self.user , 'userprofile'):
+                user_tz = self.user.userprofile.timezone
+                import pytz
+                tz = pytz.timezone(user_tz)
+                self.fields['entry_date'].initial = timezone.now().astimezone(tz)
+            else:
+                self.fields['entry_date'].initial = timezone.now()
 
         # Organize mistakes by category for better UX
         self.fields['mistakes'].queryset = Mistake.objects.all().order_by('category', 'name')
         self.fields['mistakes'].required = False
 
     def clean(self):
-        """
-        Custom validation for the entire form.
-        Ensures logical consistency between fields.
-        """
         cleaned_data = super().clean()
         entry_date = cleaned_data.get('entry_date')
         exit_date = cleaned_data.get('exit_date')
         exit_price = cleaned_data.get('exit_price')
-
-        # If exit price is provided, exit date must also be provided
-        if exit_price and not exit_date:
-            raise forms.ValidationError(
-                "Exit date is required when exit price is provided."
-            )
-
-        # If exit date is provided, exit price must also be provided
-        if exit_date and not exit_price:
-            raise forms.ValidationError(
-                "Exit price is required when exit date is provided."
-            )
-
-        # Exit date cannot be before entry date
-        if entry_date and exit_date and exit_date < entry_date:
-            raise forms.ValidationError(
-                "Exit date cannot be before entry date."
-            )
-
-        # Entry date cannot be in the future
-        if entry_date and entry_date > timezone.now():
-            raise forms.ValidationError(
-                "Entry date cannot be in the future."
-            )
-
-        # Quantity must be positive and reasonable
         quantity = cleaned_data.get('quantity')
+        entry_price = cleaned_data.get('entry_price')
+
+        # Get user's timezone
+        if self.user and hasattr(self.user, 'userprofile'):
+            import pytz
+            user_tz = pytz.timezone(self.user.userprofile.timezone)
+        else:
+            user_tz = pytz.UTC
+
+        # Make naive datetimes aware
+        if entry_date and timezone.is_naive(entry_date):
+            entry_date = timezone.make_aware(entry_date, timezone=user_tz)
+
+        if exit_date and timezone.is_naive(exit_date):
+            exit_date = timezone.make_aware(exit_date, timezone=user_tz)
+
+        # Compare with now in user's timezone
+        now_user = timezone.now().astimezone(user_tz)
+        if entry_date and entry_date > now_user + timezone.timedelta(minutes=1):
+            raise forms.ValidationError("Entry date cannot be in the future (user timezone).")
+        if exit_date and exit_date > now_user + timezone.timedelta(minutes=1):
+            raise forms.ValidationError("Exit date cannot be in the future (user timezone).")
+
+        # Exit date/price logical checks
+        if exit_price and not exit_date:
+            raise forms.ValidationError("Exit date is required when exit price is provided.")
+        if exit_date and not exit_price:
+            raise forms.ValidationError("Exit price is required when exit date is provided.")
+        if entry_date and exit_date and exit_date < entry_date:
+            raise forms.ValidationError("Exit date cannot be before entry date.")
+
+        # Quantity validation
         if quantity is not None:
             if quantity <= 0:
                 raise forms.ValidationError("Quantity must be greater than zero.")
-            if quantity > 1000000:  # Reasonable upper limit
+            if quantity > 1000000:
                 raise forms.ValidationError("Quantity seems unreasonably large. Please verify.")
 
-        # Prices must be positive and reasonable
-        entry_price = cleaned_data.get('entry_price')
+        # Price validation
         if entry_price is not None:
             if entry_price <= 0:
                 raise forms.ValidationError("Entry price must be greater than zero.")
-            if entry_price > 10000000:  # Reasonable upper limit for most assets
+            if entry_price > 10000000:
                 raise forms.ValidationError("Entry price seems unreasonably high. Please verify.")
 
         if exit_price is not None:
             if exit_price <= 0:
                 raise forms.ValidationError("Exit price must be greater than zero.")
-            if exit_price > 10000000:  # Reasonable upper limit
+            if exit_price > 10000000:
                 raise forms.ValidationError("Exit price seems unreasonably high. Please verify.")
 
         # Symbol input validation
@@ -145,10 +154,9 @@ class TradeCreateForm(forms.ModelForm):
                 raise forms.ValidationError("Symbol cannot be empty.")
             if len(symbol_input) > 20:
                 raise forms.ValidationError("Symbol name is too long (max 20 characters).")
-            # Check for invalid characters (basic validation)
             if not symbol_input.replace('-', '').replace('_', '').replace('.', '').isalnum():
                 raise forms.ValidationError("Symbol contains invalid characters. Use only letters, numbers, hyphens, underscores, and dots.")
-
+            
         return cleaned_data
 
     def save(self, commit=True, user=None):
