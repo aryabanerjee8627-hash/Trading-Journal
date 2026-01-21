@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("", include("journal.urls")),
+    path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),  # fixes login redirect
+    path('', include('journal.urls')),  # your app’s URLs
 ]
