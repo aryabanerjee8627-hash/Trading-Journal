@@ -24,12 +24,22 @@ import os
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-9#1v3!1qmpdko#669m^83&ka327-)d94x86hlu*1g_i$rspsbh")
 DEBUG = os.environ.get("DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOSTS", "*")]
+from decouple import config, Csv
 
+# Allowed hosts
+ALLOWED_HOSTS = config(
+    'ALLOWED_HOSTS',
+    default='trading-journal-lj28.onrender.com,127.0.0.1',
+    cast=Csv()
+)
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://trading-journal-tw4t.onrender.com"
-]
+# CSRF trusted origins
+CSRF_TRUSTED_ORIGINS = config(
+    'CSRF_TRUSTED_ORIGINS',
+    default='https://trading-journal-lj28.onrender.com',
+    cast=Csv()
+)
+
 
 
 # Application definition
