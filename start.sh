@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Show each command as it runs (for debugging)
-set -x
+# Exit immediately if a command fails
+set -e
 
-# Run migrations, fail loudly if error
-python manage.py migrate || { echo "Migrations failed"; exit 1; }
+echo "Running migrations..."
+python manage.py migrate
 
-# Start Gunicorn
-gunicorn trading_journal.wsgi:application || { echo "Gunicorn failed"; exit 1; }
+echo "Starting Gunicorn..."
+gunicorn trading_journal.wsgi:application --bind 0.0.0.0:$PORT --workers 1
