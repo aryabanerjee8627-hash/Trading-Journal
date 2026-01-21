@@ -25,7 +25,11 @@ SECRET_KEY = "django-insecure-9#1v3!1qmpdko#669m^83&ka327-)d94x86hlu*1g_i$rspsbh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "trading-journal-hnu3.onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
 
 
 # Application definition
