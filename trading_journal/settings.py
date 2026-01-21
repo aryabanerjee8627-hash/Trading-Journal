@@ -27,7 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://trading-journal-hnu3.onrender.com"]
 
 # Application definition
 
