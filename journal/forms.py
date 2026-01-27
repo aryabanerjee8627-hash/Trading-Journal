@@ -1,6 +1,7 @@
 from django import forms
 from django.utils import timezone
 from .models import Trade, Symbol, Mistake
+import pytz
 
 
 class TradeCreateForm(forms.ModelForm):
@@ -99,7 +100,6 @@ class TradeCreateForm(forms.ModelForm):
 
         # Get user's timezone
         if self.user and hasattr(self.user, 'userprofile'):
-            import pytz
             user_tz = pytz.timezone(self.user.userprofile.timezone)
         else:
             user_tz = pytz.UTC
