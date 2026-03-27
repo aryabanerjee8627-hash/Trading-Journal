@@ -9,6 +9,7 @@ import {
 } from '@clerk/clerk-react'
 import { api } from './lib/api'
 import StatsCards from './components/StatsCards'
+import TradingCharts from './components/TradingCharts'
 import TradeForm from './components/TradeForm'
 import TradeList from './components/TradeList'
 import { Button } from './components/ui/button'
@@ -135,6 +136,7 @@ export default function App() {
                 ) : (
                   <>
                     <StatsCards stats={stats} />
+                    <TradingCharts trades={trades} />
                     <TradeList 
                       trades={trades} 
                       onEdit={handleEditClick}
