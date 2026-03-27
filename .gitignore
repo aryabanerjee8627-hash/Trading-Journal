@@ -1,0 +1,21 @@
+# Environments
+.env
+.venv
+venv/
+ENV/
+env/
+
+# Python
+**/__pycache__/
+**/*.py[cod]
+**/*$py.class
+.pytest_cache/
+
+# Node
+**/node_modules/
+**/dist/
+.eslintcache
+
+# OS
+.DS_Store
+Thumbs.db
