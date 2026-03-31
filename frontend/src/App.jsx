@@ -92,10 +92,10 @@ export default function App() {
         <div className="flex items-center justify-center min-h-screen p-4">
           <Card className="w-full max-w-md text-center">
             <CardHeader>
-              <CardTitle className="text-3xl font-bold">Trading Journal 3.0</CardTitle>
+              <CardTitle className="text-3xl font-bold">Fire Forex Analytics & Journal</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-muted-foreground">Log your trades, track your progress, and analyze your performance.</p>
+              <p className="text-muted-foreground">Log your trades, track your progress, and analyze your forex trading performance.</p>
               <SignInButton mode="modal">
                 <Button className="w-full" size="lg">Sign In to Start</Button>
               </SignInButton>
@@ -108,7 +108,7 @@ export default function App() {
         <div className="p-8 max-w-6xl mx-auto">
           <header className="flex justify-between items-center mb-8">
             <div>
-              <h1 className="text-3xl font-bold">Trading Journal</h1>
+              <h1 className="text-3xl font-bold">Fire Forex Analytics & Journal</h1>
               <p className="text-sm text-muted-foreground">{user?.primaryEmailAddress?.emailAddress}</p>
             </div>
             <div className="flex items-center gap-4">
