@@ -1,3 +1,4 @@
+import os
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -11,9 +12,12 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+# Get allowed origins from env or default to * for flexibility
+allowed_origins = os.getenv("CORS_ALLOWED_ORIGINS", "*").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

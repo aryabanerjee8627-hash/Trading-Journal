@@ -8,7 +8,14 @@ import {
   TableRow,
 } from "./ui/table";
 import { Button } from "./ui/button";
-import { Pencil, Trash2, ExternalLink } from "lucide-react";
+import { Pencil, Trash2, ExternalLink, MessageSquare } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
 
 export default function TradeList({ trades, onEdit, onDelete }) {
   if (!trades || trades.length === 0) {
@@ -71,15 +78,36 @@ export default function TradeList({ trades, onEdit, onDelete }) {
               <TableCell>{formatPnL(trade.net_pnl)}</TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
+                  {trade.mistakes && trade.mistakes.length > 0 && (
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="ghost" size="icon" title="View Notes">
+                          <MessageSquare className="h-4 w-4 text-blue-500" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Trade Notes & Mistakes</DialogTitle>
+                        </DialogHeader>
+                        <div className="mt-4 space-y-2">
+                          {trade.mistakes.map((mistake, idx) => (
+                            <div key={idx} className="p-2 bg-muted rounded-md text-sm border-l-4 border-blue-500">
+                              {mistake}
+                            </div>
+                          ))}
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  )}
                   {trade.screenshot_url && (
-                    <Button variant="ghost" size="icon" onClick={() => window.open(trade.screenshot_url, '_blank')}>
+                    <Button variant="ghost" size="icon" onClick={() => window.open(trade.screenshot_url, '_blank')} title="View Screenshot">
                       <ExternalLink className="h-4 w-4" />
                     </Button>
                   )}
-                  <Button variant="ghost" size="icon" onClick={() => onEdit(trade)}>
+                  <Button variant="ghost" size="icon" onClick={() => onEdit(trade)} title="Edit Trade">
                     <Pencil className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => onDelete(trade.id)}>
+                  <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => onDelete(trade.id)} title="Delete Trade">
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>

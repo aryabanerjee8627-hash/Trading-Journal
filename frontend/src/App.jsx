@@ -57,6 +57,7 @@ export default function App() {
       setShowForm(false)
     } catch (error) {
       console.error('Failed to create trade:', error)
+      alert('Failed to create trade: ' + error.message)
     }
   }
 
@@ -68,6 +69,7 @@ export default function App() {
       setEditingTrade(null)
     } catch (error) {
       console.error('Failed to update trade:', error)
+      alert('Failed to update trade: ' + error.message)
     }
   }
 
