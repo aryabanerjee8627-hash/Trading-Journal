@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8000'
+const API_BASE_URL = 'https://trading-journal-api-lgkz.onrender.com'
 
 // We will pass the clerk session object to these methods
 export const api = {
