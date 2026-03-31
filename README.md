@@ -21,12 +21,15 @@
 
 ### **Trade Logging & Notes**
 > *Log trades with precision, including screenshot URLs and psychological notes.*
-![Trade Log Screenshot](./screenshots/trade-log.png) 
+![Trade Log Screenshot](./screenshots/tradelog.png) 
 
 ### **Quick Analysis View**
 > *Review your trade mistakes and notes instantly without leaving the list.*
-![Notes Popup Screenshot](./screenshots/notes-view.png) 
-
+![Notes Popup Screenshot](./screenshots/notesview.png)
+> 
+### **Chart Screenshot URL**
+> *See the screenshot of the registered trade by accessing the given url (eg: from TradingView).*
+![Notes Popup Screenshot](./screenshots/chart.png) 
 ---
 
 ## ✨ Key Features
