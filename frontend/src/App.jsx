@@ -12,6 +12,8 @@ import StatsCards from './components/StatsCards'
 import TradingCharts from './components/TradingCharts'
 import TradeForm from './components/TradeForm'
 import TradeList from './components/TradeList'
+import AnimatedBackground from './components/AnimatedBackground'
+import CursorFollower from './components/CursorFollower'
 import { Button } from './components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from './components/ui/card'
 
@@ -89,7 +91,9 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      <AnimatedBackground />
+      <CursorFollower />
       <SignedOut>
         <div className="flex items-center justify-center min-h-screen p-4">
           <Card className="w-full max-w-md text-center">

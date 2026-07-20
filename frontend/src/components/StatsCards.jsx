@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Trophy, TrendingUp, TrendingDown, Target, DollarSign, Percent, AlertCircle, Calculator } from 'lucide-react';
 
@@ -66,20 +67,37 @@ export default function StatsCards({ stats }) {
       {cards.map((card, index) => {
         const Icon = card.icon;
         return (
-          <Card key={index}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                {card.title}
-              </CardTitle>
-              <Icon className={`h-4 w-4 ${card.color}`} />
-            </CardHeader>
-            <CardContent>
-              <div className={`text-2xl font-bold ${card.color}`}>{card.value}</div>
-              <p className="text-xs text-muted-foreground">
-                {card.description}
-              </p>
-            </CardContent>
-          </Card>
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              delay: index * 0.08,
+              duration: 0.4,
+              ease: [0.25, 1, 0.5, 1],
+            }}
+            whileHover={{
+              scale: 1.02,
+              y: -4,
+              boxShadow: '0 8px 30px hsl(var(--primary) / 0.08)',
+            }}
+            style={{ originY: 0 }}
+          >
+            <Card className="cursor-pointer transition-colors duration-200">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  {card.title}
+                </CardTitle>
+                <Icon className={`h-4 w-4 ${card.color}`} />
+              </CardHeader>
+              <CardContent>
+                <div className={`text-2xl font-bold ${card.color}`}>{card.value}</div>
+                <p className="text-xs text-muted-foreground">
+                  {card.description}
+                </p>
+              </CardContent>
+            </Card>
+          </motion.div>
         );
       })}
     </div>
