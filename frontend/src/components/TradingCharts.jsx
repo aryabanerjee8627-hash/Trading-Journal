@@ -91,7 +91,7 @@ export default function TradingCharts({ trades }) {
 
   const ANIMATION = {
     duration: 1500,
-    easing: 'ease-out-quart',
+    easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
   }
 
   return (

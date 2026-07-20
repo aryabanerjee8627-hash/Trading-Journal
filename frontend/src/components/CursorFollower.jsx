@@ -37,9 +37,9 @@ export default function CursorFollower() {
       <div
         className="-translate-x-1/2 -translate-y-1/2 rounded-full"
         style={{
-          width: 20,
-          height: 20,
-          background: 'radial-gradient(circle, hsl(var(--primary) / 0.25) 0%, transparent 70%)',
+          width: 32,
+          height: 32,
+          background: 'radial-gradient(circle, oklch(0.65 0.14 165 / 0.35) 0%, transparent 70%)',
           mixBlendMode: 'overlay',
         }}
       />

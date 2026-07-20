@@ -1,42 +1,38 @@
-import { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 
 const ORBS = [
   {
-    size: 600,
-    color: 'var(--primary)',
-    initialX: -200,
+    size: 700,
+    color: 'oklch(0.65 0.14 165)',
+    initialX: -300,
     initialY: -200,
     animate: {
-      x: [0, 120, -80, 60, 0],
-      y: [0, -100, 80, -60, 0],
-      scale: [1, 1.15, 0.9, 1.1, 1],
+      x: [0, 140, -100, 80, 0],
+      y: [0, -120, 100, -80, 0],
+      scale: [1, 1.2, 0.85, 1.1, 1],
     },
-    opacity: 0.04,
   },
   {
-    size: 450,
-    color: 'var(--chart-2)',
+    size: 500,
+    color: 'oklch(0.6 0.12 220)',
     initialX: 400,
-    initialY: 300,
+    initialY: 100,
     animate: {
-      x: [0, -80, 100, -40, 0],
-      y: [0, 60, -120, 80, 0],
-      scale: [1, 0.85, 1.1, 0.95, 1],
+      x: [0, -100, 120, -60, 0],
+      y: [0, 80, -140, 100, 0],
+      scale: [1, 0.8, 1.15, 0.9, 1],
     },
-    opacity: 0.035,
   },
   {
-    size: 350,
-    color: 'var(--muted-foreground)',
+    size: 400,
+    color: 'oklch(0.7 0.1 30)',
     initialX: -100,
     initialY: 500,
     animate: {
-      x: [0, 60, -100, 40, 0],
-      y: [0, -80, 60, -40, 0],
-      scale: [1, 1.1, 0.95, 1.05, 1],
+      x: [0, 80, -120, 60, 0],
+      y: [0, -100, 80, -60, 0],
+      scale: [1, 1.15, 0.9, 1.05, 1],
     },
-    opacity: 0.03,
   },
 ]
 
@@ -55,9 +51,8 @@ export default function AnimatedBackground() {
             background: `radial-gradient(circle, ${orb.color} 0%, transparent 70%)`,
             left: `calc(50% + ${orb.initialX}px)`,
             top: `calc(50% + ${orb.initialY}px)`,
-            opacity: prefersReducedMotion ? 0.02 : orb.opacity,
+            opacity: prefersReducedMotion ? 0.03 : 0.07,
             transform: 'translate(-50%, -50%)',
-            willChange: prefersReducedMotion ? 'auto' : 'transform',
           }}
           animate={
             prefersReducedMotion
@@ -69,7 +64,7 @@ export default function AnimatedBackground() {
                 }
           }
           transition={{
-            duration: 20 + index * 5,
+            duration: 25 + index * 8,
             repeat: Infinity,
             ease: 'linear',
             repeatType: 'reverse',
