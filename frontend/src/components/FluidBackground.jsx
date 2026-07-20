@@ -16,13 +16,13 @@ export default function FluidBackground() {
     let config = {
       SIM_RESOLUTION: 96,
       DYE_RESOLUTION: 720,
-      DENSITY_DISSIPATION: 5,
-      VELOCITY_DISSIPATION: 3,
+      DENSITY_DISSIPATION: 2.5,
+      VELOCITY_DISSIPATION: 2,
       PRESSURE: 0.1,
       PRESSURE_ITERATIONS: 15,
       CURL: 2,
-      SPLAT_RADIUS: 0.15,
-      SPLAT_FORCE: 2000,
+      SPLAT_RADIUS: 0.2,
+      SPLAT_FORCE: 4000,
       SHADING: false,
       COLOR_UPDATE_SPEED: 0,
       PAUSED: false,
@@ -55,6 +55,15 @@ export default function FluidBackground() {
 
     displayMaterial.setKeywords(config.SHADING ? ['SHADING'] : [])
     initFramebuffers()
+
+    function initialSplat() {
+      const cx = canvas.width / 2
+      const cy = canvas.height / 2
+      const c = { r: 0.15, g: 0.12, b: 0.08 }
+      doSplat(0.5, 0.5, 0, 0, c)
+      doSplat(0.3, 0.4, 200, -100, generateSophisticatedColor())
+      doSplat(0.7, 0.6, -200, 100, generateSophisticatedColor())
+    }
 
     function initFramebuffers() {
       let simRes = getResolution(config.SIM_RESOLUTION)
@@ -302,6 +311,10 @@ export default function FluidBackground() {
     window.addEventListener('touchmove', onTouchMove, { passive: true })
     window.addEventListener('touchend', onTouchEnd)
 
+    requestAnimationFrame(() => {
+      initialSplat()
+    })
+
     tick()
 
     return () => {
@@ -338,9 +351,9 @@ export default function FluidBackground() {
     }
 
     function generateSophisticatedColor() {
-      const hue = 165 + Math.random() * 40
-      const sat = 0.08 + Math.random() * 0.12
-      const val = 0.08 + Math.random() * 0.12
+      const hue = 155 + Math.random() * 60
+      const sat = 0.4 + Math.random() * 0.3
+      const val = 0.4 + Math.random() * 0.2
       return HSVtoRGB(hue / 360, sat, val)
     }
 
