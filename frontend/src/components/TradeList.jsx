@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 import {
   Table,
   TableBody,
@@ -59,12 +60,23 @@ export default function TradeList({ trades, onEdit, onDelete }) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {trades.map((trade) => (
-            <TableRow key={trade.id}>
+          {trades.map((trade, index) => (
+            <motion.tr
+              key={trade.id}
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{
+                delay: index * 0.03,
+                duration: 0.3,
+                ease: [0.25, 1, 0.5, 1],
+              }}
+              className="group/row"
+              style={{ originX: 0 }}
+            >
               <TableCell className="text-muted-foreground text-xs">
                 {formatDate(trade.trade_time)}
               </TableCell>
-              <TableCell className="font-bold">{trade.pair}</TableCell>
+              <TableCell className="font-bold tabular-nums">{trade.pair}</TableCell>
               <TableCell>
                 <span className={`text-xs px-2 py-0.5 rounded-full ${
                   trade.direction === 'BUY' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
@@ -72,10 +84,10 @@ export default function TradeList({ trades, onEdit, onDelete }) {
                   {trade.direction}
                 </span>
               </TableCell>
-              <TableCell>{trade.lot_size}</TableCell>
-              <TableCell className="font-mono text-xs">{parseFloat(trade.entry_price).toFixed(5)}</TableCell>
-              <TableCell className="font-mono text-xs">{trade.exit_price ? parseFloat(trade.exit_price).toFixed(5) : "-"}</TableCell>
-              <TableCell>{formatPnL(trade.net_pnl)}</TableCell>
+              <TableCell className="tabular-nums">{trade.lot_size}</TableCell>
+              <TableCell className="font-mono text-xs tabular-nums">{parseFloat(trade.entry_price).toFixed(5)}</TableCell>
+              <TableCell className="font-mono text-xs tabular-nums">{trade.exit_price ? parseFloat(trade.exit_price).toFixed(5) : "-"}</TableCell>
+              <TableCell className="tabular-nums">{formatPnL(trade.net_pnl)}</TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
                   {trade.mistakes && trade.mistakes.length > 0 && (
@@ -112,7 +124,7 @@ export default function TradeList({ trades, onEdit, onDelete }) {
                   </Button>
                 </div>
               </TableCell>
-            </TableRow>
+            </motion.tr>
           ))}
         </TableBody>
       </Table>

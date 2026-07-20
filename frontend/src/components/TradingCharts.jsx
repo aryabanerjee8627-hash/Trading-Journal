@@ -101,6 +101,8 @@ export default function TradingCharts({ trades }) {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0, duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
+        whileHover={{ scale: 1.01, y: -2 }}
+        style={{ originY: 0 }}
       >
         <Card>
           <CardHeader>
@@ -154,6 +156,8 @@ export default function TradingCharts({ trades }) {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1, duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
+        whileHover={{ scale: 1.01, y: -2 }}
+        style={{ originY: 0 }}
       >
         <Card>
           <CardHeader>
@@ -206,6 +210,8 @@ export default function TradingCharts({ trades }) {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05, duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
+        whileHover={{ scale: 1.01, y: -2 }}
+        style={{ originY: 0 }}
       >
         <Card>
           <CardHeader>
@@ -263,6 +269,8 @@ export default function TradingCharts({ trades }) {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15, duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
+        whileHover={{ scale: 1.01, y: -2 }}
+        style={{ originY: 0 }}
       >
         <Card>
           <CardHeader>

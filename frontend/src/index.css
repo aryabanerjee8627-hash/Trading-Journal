@@ -126,13 +126,28 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    }
-  body {
-    @apply bg-background text-foreground;
-    }
+    font-kerning: normal;
+  }
   html {
     @apply font-sans;
-    }
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-optical-sizing: auto;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-kerning: normal;
+  }
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+  p, li, figcaption {
+    text-wrap: pretty;
+  }
+}
+
+@utility tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
 
 @media (prefers-reduced-motion: reduce) {
