@@ -8,17 +8,6 @@ def detect_instrument(pair : str):
     else:
         return "forex"
 
-
-def detect_trading_session(trade_time):
-    t = trade_time.time()
-    if time(0,0) <= t < time(8,0):
-        return "A"
-    elif time(8,0) <= t < time(13,0):
-        return "L"
-    elif time(13,0) <= t < time(22,0):
-        return "NY"
-    return None
-
 def get_pip_value_multiplier(pair):
     pair = pair.upper()
     if "XAU" in pair:
@@ -51,7 +40,6 @@ def calculate_pnl_risk(pair, direction, entry_price, exit_price, lot_size, stop_
 
     risk_pips = abs(entry_price - stop_loss) * pip_factor
     risk = risk_pips * (multiplier / pip_factor) * lot_size
-    risk = abs(entry_price - stop_loss) * multiplier * lot_size
 
     gross_pnl = None
     r_multiple = None
